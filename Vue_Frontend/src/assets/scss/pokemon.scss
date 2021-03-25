@@ -1,0 +1,484 @@
+@import 'https://fonts.googleapis.com/css?family=VT323';
+$black: #333;
+$white: #fff;
+$primary-color: #f65a52;
+$primary-color-dark: darken( $primary-color, 10%);
+$primary-color-tint: lighten( $primary-color, 15%);
+$primary-font: "VT323",
+monospace;
+$secondary-color: #94acbd;
+$secondary-color-dark: darken( $secondary-color, 10%);
+$options-color: #c5d5ee;
+$options-color-hover: darken( $options-color, 7%);
+$success-color: #7bd55a;
+$error-color: #ff8b62;
+$border-radius-main: 1rem;
+$border-width: 6px;
+$border-main: solid $border-width $black;
+$options-height: 48px;
+* {
+    box-sizing: border-box;
+}
+
+#pokemon {
+    margin-top: -45px;
+    width: 100%;
+    height: 100%;
+    background-color: $primary-color;
+    font-family: $primary-font;
+    font-size: 12px;
+    line-height: 1.875em;
+    color: $black;
+}
+
+.container {
+    width: 100%;
+    max-width: 400px;
+    position: relative;
+    margin: 50px auto;
+}
+
+h2 {
+    font-size: 1.25rem;
+    white-space: nowrap;
+}
+
+.spacer {
+    margin-bottom: 0.5rem;
+}
+
+.button {
+    padding: 0.5em 1.5em;
+    border-radius: $border-radius-main;
+    border: solid 1px transparent;
+    font-family: $primary-font;
+    font-size: 1.5rem;
+    background-color: $primary-color-dark;
+    color: $black;
+    cursor: pointer;
+    transition: 0.35s;
+    &:focus {
+        outline: none;
+        border: 1px dotted lighten($primary-color, 8%);
+    }
+    &:not([disabled]) {
+        &:hover {
+            background-color: $black;
+            color: $primary-color;
+        }
+    }
+}
+
+.poke-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    max-width: 500px;
+    margin: auto;
+}
+
+.poke-intro-trainer {
+    position: relative;
+    margin-bottom: 1rem;
+    height: 200px;
+    width: 200px;
+    .poke-trainer-img {
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        height: 200px;
+        opacity: 0;
+        transition: 0.4s cubic-bezier(.22, .75, .53, .99);
+        @media (max-width: 479px) {
+            display: none;
+        }
+        &.active {
+            transform: translateX(-50%);
+            opacity: 1;
+        }
+        &-classic {
+            bottom: 5px;
+            height: 180px;
+            image-rendering: pixelated;
+            transform: translateX(-80%);
+        }
+        &-master {
+            transform: translateX(-20%);
+        }
+    }
+}
+
+.poke-ball {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    background-color: $primary-color-dark;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+    }
+    &::before {
+        z-index: 2;
+        top: 50%;
+        left: 50%;
+        height: 40px;
+        width: 40px;
+        border-radius: 50%;
+        border: solid $border-width $primary-color;
+        background-color: $primary-color-tint;
+        transform: translate(-50%, -50%);
+    }
+    &::after {
+        z-index: 1;
+        top: 50%;
+        height: 50%;
+        width: 100%;
+        border-top: solid $border-width $primary-color;
+        background-color: $primary-color-tint;
+    }
+}
+
+.poke-title {
+    position: absolute;
+    top: -2rem;
+}
+
+.poke-question {
+    position: absolute;
+    right: calc(100% + 0.5rem);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    &-wrapper {
+        position: relative;
+        width: 250px;
+    }
+    &-number {
+        font-size: 8rem;
+        line-height: 0.4;
+        color: $primary-color-tint;
+    }
+}
+
+.poke-score {
+    position: absolute;
+    top: 6rem;
+    right: calc(100% + 0.5rem);
+    padding-top: 1rem;
+    font-size: 1.25rem;
+    white-space: nowrap;
+    color: $black;
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 40px;
+        height: $border-width;
+        background-color: $black;
+    }
+}
+
+.poke-image {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 250px;
+    height: 250px;
+    border-radius: $border-radius-main;
+    border: $border-main;
+    background-color: $white;
+    overflow: hidden;
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        border-radius: 50%;
+    }
+    &::before {
+        width: 100px;
+        height: 100px;
+        background-color: $options-color;
+        opacity: 1;
+        transition: 0.65s ease-in-out;
+    }
+    &::after {
+        width: 100px;
+        height: 100px;
+        border: solid ($border-width * 2) $options-color;
+        transform: scale(0);
+        transition: 0.4s ease-in-out;
+    }
+    &-img {
+        width: auto;
+        height: 150px;
+    }
+    &-success,
+    &-error {
+        &::before {
+            transform: scale(4);
+            opacity: 0.5;
+        }
+        &::after {
+            transform: scale(1);
+        }
+    }
+    &-success {
+        &::before {
+            background-color: $success-color;
+        }
+        &::after {
+            border-color: $success-color;
+        }
+    }
+    &-error {
+        &::before {
+            background-color: $error-color;
+        }
+        &::after {
+            border-color: $error-color;
+            width: 10px;
+            border-radius: $border-radius-main;
+            transform: rotate(45deg);
+        }
+    }
+}
+
+.poke-options {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 3;
+    top: -30px;
+    padding: 0 20px;
+    margin: 0 auto;
+    width: 170px;
+    border-radius: $border-radius-main;
+    background-color: $black;
+    &:not(.poke-options-answers) {
+        .poke-options-button {
+            &:not(.selected) {
+                &:hover {
+                    background-color: $options-color-hover;
+                    // color: $primary-color-dark;
+                    transform: translateY(-$border-width / 2);
+                }
+                &:active {
+                    &::before {
+                        transform: translate(-50%, -50%) scale(1);
+                    }
+                }
+            }
+        }
+    }
+    &.poke-options-answers {
+        .poke-options-button {
+            cursor: default;
+            &:not(.error):not(.success) {
+                color: $secondary-color;
+            }
+        }
+    }
+    &-button {
+        position: relative;
+        width: 100%;
+        padding: 0.5em;
+        min-width: 200px;
+        max-height: $options-height;
+        border: $border-main;
+        border-radius: $border-radius-main;
+        background-color: $options-color;
+        font-family: $primary-font;
+        font-size: 1.125rem;
+        transition: 0.45s;
+        cursor: pointer;
+        overflow: hidden;
+        &:focus {
+            outline: none;
+        }
+        &::before {
+            content: '';
+            position: absolute;
+            z-index: -1;
+            left: 50%;
+            top: 50%;
+            height: 200px;
+            width: 200px;
+            border-radius: 50%;
+            background-color: $secondary-color;
+            transform: translate(-50%, -50%) scale(0);
+            transition: 0.2s ease-in-out;
+        }
+        &:not(:last-child) {
+            margin-bottom: $border-width / 2;
+        }
+        &.selected {
+            background-color: $secondary-color;
+        }
+        &.error {
+            background-color: $error-color;
+        }
+        &.success {
+            background-color: $success-color;
+        }
+    }
+}
+
+.poke-buttons {
+    text-align: center;
+    @media (min-width: 480px) {
+        position: absolute;
+        top: 20px;
+        left: 100%;
+        .button {
+            padding-left: calc(1em + 10px);
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            transform: translateX(-10px);
+        }
+    }
+    .button {
+        padding: 1em;
+        width: 110px;
+        height: 100px;
+        color: $white;
+        &[disabled] {
+            color: $primary-color-tint;
+            opacity: 0.7;
+            cursor: default;
+        }
+        &:not([disabled]) {
+            &:hover {
+                transform: translateX(0);
+            }
+        }
+        &:not(:last-child) {
+            margin-bottom: $border-width;
+        }
+    }
+}
+
+.poke-final {
+    text-align: center;
+    &-score {
+        display: block;
+        position: relative;
+        margin-bottom: 1rem;
+        &::before {
+            content: '';
+            position: absolute;
+            z-index: -1;
+            top: 50%;
+            left: 50%;
+            height: 100px;
+            width: 100px;
+            border-radius: 50%;
+            border: solid ($border-width * 2) $primary-color-dark;
+            transform: translate(-50%, -50%);
+            opacity: 0.3;
+            animation: grow 2s infinite ease-in-out;
+        }
+        &-number {
+            font-size: 8rem;
+            line-height: 0.4;
+            color: $primary-color-tint;
+        }
+    }
+}
+
+.poke-classic {
+    .poke-image {
+        &-img {
+            image-rendering: pixelated;
+        }
+    }
+}
+
+.animate-section {
+    &-enter-active,
+    &-leave-active {
+        transition: 0.4s ease-in-out;
+    }
+    &-enter,
+    &-leave-to {
+        opacity: 0;
+    }
+    &-enter {
+        .poke-final-score-number {
+            transform: translateY(-30px);
+        }
+    }
+    &-leave-active {
+        transform: translateX(-30%);
+    }
+    &-enter-active {
+        transition-delay: 0.1s;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+.animate-options {
+    &-enter-active {
+        transition: 0.4s ease-in-out;
+        @for $i from 4 through 8 {
+            &:nth-child(#{$i}) {
+                transition-delay: 0.2s * ($i - 4);
+            }
+        }
+    }
+    &-enter {
+        transform: rotateX(-45deg);
+        transform-origin: top center;
+        opacity: 0;
+    }
+    &-leave-active {
+        position: absolute;
+        z-index: -1;
+        transition: 0.8s ease-in-out;
+        // @for $i from 0 through 3 {
+        // 	$child: $i + 1;
+        // 	&:nth-child(#{$child}) {
+        // 		top: ($options-height + $border-width / 2) * $i;
+        // 	}
+        // }
+        &[data-index="0"] {
+            top: 0;
+        }
+        &[data-index="1"] {
+            top: ($options-height + $border-width / 2);
+        }
+        &[data-index="2"] {
+            top: ($options-height + $border-width / 2) * 2;
+        }
+        &[data-index="3"] {
+            top: ($options-height + $border-width / 2) * 3;
+        }
+    }
+    &-leave-to {
+        opacity: 0;
+    }
+}
+
+@keyframes grow {
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(1)
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(0.6)
+    }
+}
